@@ -1,0 +1,68 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches
+.cachegrind
+.cache
+.pytest_cache
+mypy_cache/
+# Logs
+*.log
+
+# Virtual environment
+venv/
+env/
+__env__/
+ENV/
+env.bak/
+venv.bak/
+
+# DB Files
+*.db
+
+# Backup Files
+*.bak
+
+# Credentials
+*.env
+
+# Compiled Python files
+*.pyc
+
+# Output of the 'coverage' tool
+htmlcov/
+.coverage
+.tox/
+
+# Sphinx documentation
+docs/_build/
+.doctrees/
+
+# PyInstaller
+dist/
+build/
+*.spec
+
+# Distribution / packaging
+.Python
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+__pycache__/
+*.pyc
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pipenv
+Pipfile.lock
