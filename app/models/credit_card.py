@@ -1,10 +1,15 @@
-from app import db
+from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 
-class CreditCard(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    exp_date = db.Column(db.String(7), nullable=False)
-    holder = db.Column(db.String(255), nullable=False)
-    number = db.Column(db.String(255), nullable=False, unique=True)
-    cvv = db.Column(db.String(4))
-    brand = db.Column(db.String(255))
+class CreditCard(Base):
+    __tablename__ = 'credit_card'
+
+    id = Column(Integer, primary_key=True)
+    exp_date = Column(Date)
+    holder = Column(String)
+    number = Column(String)
+    cvv = Column(String)
+    brand = Column(String)
