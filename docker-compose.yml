@@ -1,0 +1,33 @@
+version: '3.7'
+services:
+  app:
+    build: .
+    ports:
+      - "5002:5002"
+    depends_on:
+      - postgres
+    environment:
+      DB_POSTGRES_HOST: ${DB_POSTGRES_HOST}
+      DB_POSTGRES_PORT: ${DB_POSTGRES_PORT}
+      DB_POSTGRES_NAME: ${DB_POSTGRES_NAME}
+      DB_POSTGRES_USER: ${DB_POSTGRES_USER}
+      DB_POSTGRES_PASSWORD: ${DB_POSTGRES_PASSWORD}
+    networks:
+      - prv-net
+
+  postgres:
+    container_name: todos_database
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_POSTGRES_NAME}
+      POSTGRES_USER: ${DB_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DB_POSTGRES_PASSWORD}
+    ports:
+      - 5437:5432
+    networks:
+      - prv-net
+
+networks:
+  prv-net:
+    driver: bridge
