@@ -1,14 +1,13 @@
-FROM python:3.8-slim
-
-ENV FLASK_APP=app
-ENV FLASK_ENV=development
+FROM python:3.8
 
 WORKDIR /app
 
-COPY . .
+COPY . /app
 
 RUN pip install -r requirements.txt
 
-EXPOSE 5000
+RUN flask db init
+RUN flask db migrate -m "Create credit_card table"
+RUN flask db upgrade
 
 CMD ["flask", "run", "--host=0.0.0.0"]
