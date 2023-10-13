@@ -17,18 +17,20 @@ class CreditCardService:
 
     def create_credit_card(self, payload):
         print("payload: ", payload)
-        formatted_exp_date = self.validator.format_exp_date(payload.exp_date)
 
-        if formatted_exp_date:
-            new_credit_card = {
-                "exp_date": formatted_exp_date,
-                "holder": payload.holder,
-                "number": payload.number,
-                "cvv": payload.cvv,
-                "brand": "AQUI_VAI_A_BANDEIRA",
-            }
+        if "exp_date" in payload:
+            formatted_exp_date = self.validator.format_exp_date(payload["exp_date"])
 
-            created_credit_card = self.repository.create_credit_card(new_credit_card)
+            if formatted_exp_date:
+                new_credit_card = {
+                    "exp_date": formatted_exp_date,
+                    "holder": payload["holder"],
+                    "number": payload["number"],
+                    "cvv": payload["cvv"],
+                    "brand": "AQUI_VAI_A_BANDEIRA",
+                }
+
+                created_credit_card = self.repository.create_credit_card(new_credit_card)
 
             return created_credit_card, 201
         else:
