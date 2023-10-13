@@ -1,8 +1,13 @@
-from marshmallow import Schema, fields
+from pydantic import BaseModel
 
 
-class CreditCardSchema(Schema):
-    exp_date = fields.Str(required=True)
-    holder = fields.Str(required=True)
-    number = fields.Str(required=True)
-    cvv = fields.Str(validate=lambda s: 3 <= len(s) <= 4)
+class CreditCardSchema(BaseModel):
+    id: int = None
+    exp_date: str = None
+    holder: str = None
+    number: str = None
+    cvv: str = None
+    brand: str = None
+
+    class Config:
+        orm_mode = True
