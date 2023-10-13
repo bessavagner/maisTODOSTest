@@ -13,3 +13,13 @@ class CreditCard(Base):
     number = Column(String)
     cvv = Column(String)
     brand = Column(String)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'exp_date': self.exp_date,
+            'holder': self.holder,
+            'number': self.number,
+            'cvv': self.cvv,
+            'brand': self.brand
+        }
