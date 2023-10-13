@@ -43,7 +43,7 @@ flask db upgrade
 7. Inicie o aplicativo.
 flask run
 
-##Via Docker
+## Via Docker
 
 1. Crie um arquivo .env na raiz do projeto para configurar as variáveis de ambiente necessárias,como no env.sample.
 
@@ -53,7 +53,7 @@ Isso iniciará o aplicativo Flask e o banco de dados PostgreSQL em contêineres 
 
 3. Acesse o aplicativo em seu navegador em http://localhost:5000.
 
-##Uso
+## Uso
 Registre-se ou faça login para começar a usar o sistema.
 Crie, edite, exclua e visualize cartões de crédito.
 
