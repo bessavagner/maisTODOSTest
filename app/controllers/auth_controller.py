@@ -18,11 +18,11 @@ def register():
     if 'email' in data and 'password' in data and 'confirm_password' in data:
         user = user_service.create_user(data)
         if user:
-            return jsonify({"message": "User registered successfully"}, 201)
+            return jsonify({"message": "User registered successfully"}), 201
         else:
-            return jsonify({"message": "Failed to register user"}, 400)
+            return jsonify({"message": "Failed to register user"}), 400
     else:
-        return jsonify({"message": "Email and password are required"}, 400)
+        return jsonify({"message": "Email and password are required"}), 400
 
 
 @app.route('/api/v1/login', methods=['POST'])
@@ -38,9 +38,9 @@ def login():
             return jsonify({'message': 'Validated successfully', 'token': token,
                             'exp': datetime.datetime.now() + datetime.timedelta(hours=1)})
         else:
-            return jsonify({"message": "Invalid email or password"}, 401)
+            return jsonify({"message": "Invalid email or password"}), 401
     else:
-        return jsonify({"message": "Email and password are required"}, 400)
+        return jsonify({"message": "Email and password are required"}), 400
 
 
 @app.route('/api/v1/user/<string:username>', methods=['GET'])
@@ -48,6 +48,6 @@ def get_user_by_email(username):
     user = user_service.get_user_by_email(username)
 
     if user:
-        return jsonify(user, 200)
+        return jsonify(user), 200
     else:
-        return jsonify({"message": "User not found"}, 404)
+        return jsonify({"message": "User not found"}), 404
