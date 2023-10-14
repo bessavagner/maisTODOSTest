@@ -1,9 +1,5 @@
-from webargs.flaskparser import use_args
 from pydantic import ValidationError
-from flask import request, jsonify
-from app import app
-from app.args import credit_card_args
-from app.helpers import token_required
+from flask import jsonify
 from app.models.credit_card import CreditCard
 from app.services.credit_card_service import CreditCardService
 from app.repositories.sql_credit_card_repository import SQLCreditCardRepository
@@ -13,8 +9,6 @@ credit_card_repository = SQLCreditCardRepository(CreditCard)
 credit_card_service = CreditCardService(credit_card_repository)
 
 
-@app.route('/api/v1/credit-card', methods=['GET'])
-@token_required
 def list_credit_cards(current_user):
     if not current_user:
         return jsonify({"message": "Unauthorized"}), 401
@@ -22,8 +16,6 @@ def list_credit_cards(current_user):
     return jsonify([card.to_dict() for card in credit_cards])
 
 
-@app.route('/api/v1/credit-card/<int:card_id>', methods=['GET'])
-@token_required
 def get_credit_card(card_id, current_user):
     if not current_user:
         return jsonify({"message": "Unauthorized"}), 401
@@ -36,9 +28,6 @@ def get_credit_card(card_id, current_user):
         return jsonify({"message": "Credit card not found"}), 404
 
 
-@app.route('/api/v1/credit-card', methods=['POST'])
-@use_args(credit_card_args)
-@token_required
 def create_credit_card(args, current_user):
     credit_card_data = args
 
@@ -69,4 +58,3 @@ def validate_and_parse_credit_card_data(data):
         return parsed_data
     except ValidationError as e:
         raise e
-

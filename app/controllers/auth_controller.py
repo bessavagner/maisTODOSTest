@@ -1,3 +1,4 @@
+# controllers/auth_controller.py
 import datetime
 from flask import request, jsonify
 from app import app
@@ -11,7 +12,6 @@ user_repository = SQLAlchemyUserRepository(User)
 user_service = UserService(user_repository)
 
 
-@app.route('/api/v1/register', methods=['POST'])
 def register():
     data = request.get_json()
 
@@ -25,7 +25,6 @@ def register():
         return jsonify({"message": "Email and password are required"}), 400
 
 
-@app.route('/api/v1/login', methods=['POST'])
 def login():
     data = request.get_json()
 
@@ -43,7 +42,6 @@ def login():
         return jsonify({"message": "Email and password are required"}), 400
 
 
-@app.route('/api/v1/user/<string:username>', methods=['GET'])
 def get_user_by_email(username):
     user = user_service.get_user_by_email(username)
 
