@@ -1,11 +1,14 @@
+import datetime
 from flask import request, jsonify
-from app import app, bcrypt, jwt
+from app import app
 from app.repositories.sql_auth_repository import SQLAlchemyUserRepository
 from app.services.auth_service import UserService
 from app.models.user import User
+import jwt
+from werkzeug.security import check_password_hash
 
 user_repository = SQLAlchemyUserRepository(User)
-user_service = UserService(user_repository, bcrypt, jwt)
+user_service = UserService(user_repository)
 
 
 @app.route('/api/v1/register', methods=['POST'])
@@ -15,11 +18,11 @@ def register():
     if 'email' in data and 'password' in data and 'confirm_password' in data:
         user = user_service.create_user(data)
         if user:
-            return jsonify({"message": "User registered successfully"}, 201)
+            return jsonify({"message": "User registered successfully"}), 201
         else:
-            return jsonify({"message": "Failed to register user"}, 400)
+            return jsonify({"message": "Failed to register user"}), 400
     else:
-        return jsonify({"message": "Email and password are required"}, 400)
+        return jsonify({"message": "Email and password are required"}), 400
 
 
 @app.route('/api/v1/login', methods=['POST'])
@@ -28,10 +31,23 @@ def login():
 
     if 'email' in data and 'password' in data:
         user = user_service.get_user_by_email(data['email'])
-        if user and user_service.bcrypt.check_password_hash(user.password, data['password']):
-            access_token = user_service.generate_access_token(user)
-            return jsonify({"access_token": access_token}), 200
+        if user and check_password_hash(user['password'], data['password']):
+            token = jwt.encode(
+                {'username': user['email'], 'exp': datetime.datetime.now() + datetime.timedelta(hours=12)},
+                app.config['SECRET_KEY'])
+            return jsonify({'message': 'Validated successfully', 'token': token,
+                            'exp': datetime.datetime.now() + datetime.timedelta(hours=1)})
         else:
-            return jsonify({"message": "Invalid email or password"}, 401)
+            return jsonify({"message": "Invalid email or password"}), 401
     else:
-        return jsonify({"message": "Email and password are required"}, 400)
+        return jsonify({"message": "Email and password are required"}), 400
+
+
+@app.route('/api/v1/user/<string:username>', methods=['GET'])
+def get_user_by_email(username):
+    user = user_service.get_user_by_email(username)
+
+    if user:
+        return jsonify(user), 200
+    else:
+        return jsonify({"message": "User not found"}), 404

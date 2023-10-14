@@ -1,6 +1,12 @@
+import logging
+
 from app.models.user import User
 from app.repositories.auth_repository import UserRepository
 from app import db
+
+
+class UserRepositoryException(Exception):
+    pass
 
 
 class SQLAlchemyUserRepository(UserRepository):
@@ -18,4 +24,12 @@ class SQLAlchemyUserRepository(UserRepository):
         return user
 
     def get_user_by_email(self, email):
-        return db.session.query(User).filter_by(email=email).first()
+        try:
+            user = db.session.query(User).filter(User.email == email).first()
+            if user:
+                return user.__json__()
+            else:
+                return None
+        except Exception as e:
+            logging.error(f"Error in get_user_by_email: {str(e)}")
+            raise UserRepositoryException("Error to list user by email")
