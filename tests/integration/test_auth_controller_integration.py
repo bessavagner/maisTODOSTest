@@ -1,4 +1,5 @@
 import json
+from faker import Faker
 import pytest
 from app import app, db
 from app.repositories.sql_credit_card_repository import SQLCreditCardRepository
@@ -16,7 +17,7 @@ client = app.test_client()
 
 credit_card_repository = Mock(spec=SQLCreditCardRepository)
 credit_card_service = CreditCardService(credit_card_repository)
-
+fake = Faker()
 
 @pytest.fixture
 def cleanup_database():
@@ -27,10 +28,11 @@ def cleanup_database():
 
 
 def test_register_user(cleanup_database):
+    password = fake.password()
     data = {
-        'email': 'test@example.com',
-        'password': 'testpassword',
-        'confirm_password': 'testpassword'
+        'email': fake.email(),
+        'password': password,
+        'confirm_password': password
     }
     response = client.post('/api/v1/register', data=json.dumps(data), content_type='application/json')
 
