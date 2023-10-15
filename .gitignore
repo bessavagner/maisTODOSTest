@@ -70,3 +70,9 @@ Pipfile.lock
 # Migrações do Flask-Migrate
 /migrations/
 versions/
+
+/.pytest_cache/
+/.coverage
+/nosetests.xml
+/htmlcov/
+/.tox/
