@@ -1,4 +1,5 @@
 from marshmallow import Schema, fields
+from marshmallow.exceptions import ValidationError
 
 
 class CreditCardSchema(Schema):
@@ -13,7 +14,7 @@ class CreditCardSchema(Schema):
         try:
             validated_data = self.load(data)
             return validated_data
-        except Exception as e:
+        except ValidationError as e:
             raise e
 
     class Config:
