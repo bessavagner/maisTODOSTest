@@ -21,13 +21,13 @@ class CreditCardService:
         return credit_card
 
     def create_credit_card(self, payload):
-        if "exp_date" in payload:
+        if "exp_date" in payload and "number" in payload:
             formatted_exp_date = self.validator.format_exp_date(payload["exp_date"])
 
             validate_card = self.validator.is_valid_card_number(payload["number"])
 
-            if validate_card == False:
-                return jsonify({"error": "Credit card is invalid"}), 422
+            if validate_card is False:
+                return {"error": "Credit card is invalid"}, 422
 
             brand = self.validator.get_brand_by_card_number(payload["number"])
 
@@ -49,5 +49,7 @@ class CreditCardService:
                 else:
                     return {"error": "Failed to create credit card"}, 400
 
+            else:
+                return {"error": "Invalid expiration date format"}, 400
         else:
-            return {"error": "Invalid expiration date format"}, 400
+            return {"error": "Missing required data in payload"}, 400
