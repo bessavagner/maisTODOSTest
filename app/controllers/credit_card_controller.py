@@ -16,8 +16,7 @@ credit_card_service = CreditCardService(credit_card_repository)
 
 
 @app.route('/api/v1/credit-card', methods=['GET'])
-@token_required
-def list_credit_cards(current_user):
+def list_credit_cards():
     """
     List all credit cards.
 
@@ -32,15 +31,12 @@ def list_credit_cards(current_user):
       401:
         description: Unauthorized.
     """
-    if not current_user:
-        return jsonify({"message": "Unauthorized"}), 401
     credit_cards = credit_card_service.list_credit_cards()
     return jsonify([card.to_dict() for card in credit_cards])
 
 
 @app.route('/api/v1/credit-card/<int:card_id>', methods=['GET'])
-@token_required
-def get_credit_card(card_id, current_user):
+def get_credit_card(card_id):
     """
     Get a credit card by ID.
 
@@ -63,8 +59,6 @@ def get_credit_card(card_id, current_user):
       404:
         description: Credit card not found.
     """
-    if not current_user:
-        return jsonify({"message": "Unauthorized"}), 401
 
     credit_card = credit_card_service.get_credit_card(card_id)
 
