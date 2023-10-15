@@ -1,6 +1,7 @@
+from flask_injector import FlaskInjector
+
 from app import app
 from app.injection import configure
-from flask_injector import FlaskInjector
 
 if __name__ == '__main__':
     FlaskInjector(app=app, modules=[configure])

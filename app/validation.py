@@ -18,7 +18,15 @@ class CreditCardValidator:
     def is_valid_card_number(number):
         from creditcard import CreditCard
         cc = CreditCard(number)
-        cc.is_valid()
+        valid = cc.is_valid()
+        return valid
+
+    @staticmethod
+    def get_brand_by_card_number(number):
+        from creditcard import CreditCard
+        cc = CreditCard(number)
+        brand = cc.get_brand()
+        return brand
 
     @staticmethod
     def is_valid_cvv(cvv):
