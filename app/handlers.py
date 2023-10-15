@@ -16,4 +16,4 @@ class CreditCardHandler:
             decrypted_card_number = self.fernet.decrypt(encrypted_card_number).decode()
             return decrypted_card_number
         except InvalidToken:
-            return "Número inválido ou incorreto"
+            return "Card number invalid"
