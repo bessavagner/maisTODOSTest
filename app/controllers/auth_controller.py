@@ -43,6 +43,12 @@ def register():
     data = request.get_json()
 
     if 'email' in data and 'password' in data and 'confirm_password' in data:
+        if len(data['email']) > 255:
+            return jsonify({"message": "Email is too long"}), 400
+
+        if len(data['password']) < 8:
+            return jsonify({"message": "Password is too short"}), 400
+
         user = user_service.create_user(data)
         if user:
             return jsonify({"message": "User registered successfully"}), 201
