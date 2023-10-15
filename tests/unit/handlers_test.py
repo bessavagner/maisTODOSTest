@@ -22,7 +22,7 @@ class TestCreditCardHandler(unittest.TestCase):
     def test_decrypt_invalid_credit_card_number(self):
         invalid_token = b'InvalidToken'
         decrypted_card_number = self.credit_card_handler.decrypt_credit_card_number(invalid_token)
-        self.assertEqual(decrypted_card_number, "Número inválido ou incorreto")
+        self.assertEqual(decrypted_card_number, "Card number invalid")
 
 
 if __name__ == '__main__':
