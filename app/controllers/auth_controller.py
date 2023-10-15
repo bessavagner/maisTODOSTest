@@ -20,7 +20,7 @@ def register():
         if user:
             return jsonify({"message": "User registered successfully"}), 201
         else:
-            return jsonify({"message": "Failed to register user"}), 400
+            return jsonify({"message": "Failed to register user"}), 500
     else:
         return jsonify({"message": "Email and password are required"}), 400
 
