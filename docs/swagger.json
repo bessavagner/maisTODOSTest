@@ -63,12 +63,7 @@
             "description": "Failed to create credit card"
           }
         },
-        "tags": ["Credit Cards"],
-        "security": [
-          {
-            "Bearer Auth": []
-          }
-        ]
+        "tags": ["Credit Cards"]
       }
     },
     "/api/v1/credit-card/{card_id}": {
@@ -90,12 +85,7 @@
             "description": "Credit card not found"
           }
         },
-        "tags": ["Credit Cards"],
-        "security": [
-          {
-            "Bearer Auth": []
-          }
-        ]
+        "tags": ["Credit Cards"]
       }
     },
     "/api/v1/register": {
@@ -190,12 +180,7 @@
             "description": "User not found"
           }
         },
-        "tags": ["User"],
-        "security": [
-          {
-            "Bearer Auth": []
-          }
-        ]
+        "tags": ["User"]
       }
     }
   },
