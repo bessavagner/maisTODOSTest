@@ -20,6 +20,65 @@ class TestCreditCardService(unittest.TestCase):
         result = self.service.get_credit_card(key)
         self.assertEqual(result, {'id': key, 'number': '1234'})
 
+    def test_create_credit_card_valid(self):
+        valid_payload = {
+            "exp_date": "02/2024",
+            "holder": "Samara Holanda",
+            "number": "4005519200000004",
+            "cvv": "123"
+        }
+
+        self.repository.create_credit_card.return_value = valid_payload
+
+        result, status_code = self.service.create_credit_card(valid_payload)
+        self.assertEqual(status_code, 201)
+        self.assertEqual(result, valid_payload)
+
+    def test_create_credit_card_invalid_number(self):
+        invalid_payload = {
+            "number": "1234",
+            "holder": "Luan Santos",
+            "exp_date": "12/25",
+            "cvv": "123"
+        }
+
+        result, status_code = self.service.create_credit_card(invalid_payload)
+        self.assertEqual(status_code, 422)
+
+    def test_create_credit_card_missing_data(self):
+        missing_data_payload = {
+            "holder": "Luan Santos",
+            "exp_date": "12/25",
+            "cvv": "123"
+        }
+
+        result, status_code = self.service.create_credit_card(missing_data_payload)
+        self.assertEqual(status_code, 400)
+
+    def test_create_credit_card_invalid_exp_date(self):
+        invalid_exp_date_payload = {
+            "number": "4111111111111111",
+            "holder": "Luan Santos",
+            "exp_date": "25-12-2024",
+            "cvv": "123"
+        }
+
+        result, status_code = self.service.create_credit_card(invalid_exp_date_payload)
+        self.assertEqual(status_code, 400)
+
+    def test_create_credit_card_existing_card(self):
+        existing_card_payload = {
+            "number": "4111111111111111",
+            "holder": "Luan Santos",
+            "exp_date": "12/25",
+            "cvv": "123"
+        }
+
+        self.repository.get_credit_card_by_number.return_value = existing_card_payload
+
+        result, status_code = self.service.create_credit_card(existing_card_payload)
+        self.assertEqual(status_code, 400)
+
 
 if __name__ == '__main__':
     unittest.main()
