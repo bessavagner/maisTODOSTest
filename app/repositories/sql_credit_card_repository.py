@@ -35,7 +35,8 @@ class SQLCreditCardRepository(CreditCardRepository):
             exp_date=data['exp_date'],
             holder=data['holder'],
             number=data['number'],
-            cvv=data.get('cvv')
+            cvv=data.get('cvv'),
+            brand=data.get('brand')
         )
         db.session.add(new_credit_card)
         db.session.commit()
