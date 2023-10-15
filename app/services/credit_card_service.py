@@ -1,5 +1,10 @@
+from flask import jsonify
+
 from app.repositories.credit_card_repository import CreditCardRepository
 from app.validation import CreditCardValidator
+from app.handlers import CreditCardHandler
+
+credit_card_handler = CreditCardHandler()
 
 
 class CreditCardService:
@@ -16,22 +21,33 @@ class CreditCardService:
         return credit_card
 
     def create_credit_card(self, payload):
-        print("payload: ", payload)
-
         if "exp_date" in payload:
             formatted_exp_date = self.validator.format_exp_date(payload["exp_date"])
+
+            validate_card = self.validator.is_valid_card_number(payload["number"])
+
+            if validate_card == False:
+                return jsonify({"error": "Credit card is invalid"}), 422
+
+            brand = self.validator.get_brand_by_card_number(payload["number"])
+
+            credit_card = credit_card_handler.encrypt_credit_card_number(payload["number"])
 
             if formatted_exp_date:
                 new_credit_card = {
                     "exp_date": formatted_exp_date,
                     "holder": payload["holder"],
-                    "number": payload["number"],
+                    "number": credit_card,
                     "cvv": payload["cvv"],
-                    "brand": "AQUI_VAI_A_BANDEIRA",
+                    "brand": brand
                 }
 
                 created_credit_card = self.repository.create_credit_card(new_credit_card)
 
-            return created_credit_card, 201
+                if created_credit_card:
+                    return created_credit_card, 201
+                else:
+                    return {"error": "Failed to create credit card"}, 400
+
         else:
             return {"error": "Invalid expiration date format"}, 400
