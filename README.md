@@ -121,6 +121,7 @@ Esteja a vontade para criar os valores de acordo com o que preferir
 
 `DATABASE_URL=postgresql://user:password@host/name`
 ## Documentação
+!Importante Deve estar com a aplicação rodando para funcionar
 
 [Documentação Swagger](http://localhost:5000/api/docs)
 
@@ -143,6 +144,21 @@ Para visualizar o resultado dos testes:
 ```bash
   coverage report
 ```
+
+## Possíveis erros
+É possível encontrar um erro ao rodar a aplicação com docker. Não consegui descbrir a tempo o que está causando o erro. Caso aconteça, tente fazer o seguinte:
+rode o seguinte comando do docker
+```shell
+  docker-compose up -d
+```
+Rode localmente tudo como foi ensinado anteriormente, já com o banco montado pelo docker-compose para rodar a aplicação localmente.
+
+É possível encontrar um erro no psycopg2 ao instalar o requirements.txt localmente, esse erro: Error: pg_config executable not found.
+Caso se depare com esse erro, faça o seguinte:
+```shell
+  sudo apt-get install libpq-dev
+```
+
 
 
 ## Aprendizados
