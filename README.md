@@ -58,14 +58,21 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-6. Execute as migrações do banco de dados.
+6. Copie o env.sample para o env
+```shell
+  cp env.sample .env
+```
+
+7. Modifique as variáveis do seu .env
+
+8. Execute as migrações do banco de dados.
 ```shell
 flask db init
 flask db migrate
 flask db upgrade
 ```
 
-7. Inicie o aplicativo.
+9. Inicie o aplicativo.
 ```shell
 flask run
 ```
@@ -77,13 +84,18 @@ flask run
 cp .env.sample .env
 ```
 
-2. Inicie os contêineres:
+2. Modifique as variáveis do seu .env
+
+3. Inicie os contêineres:
 ```shell
 docker-compose up
 ```
 Isso iniciará o aplicativo Flask e o banco de dados PostgreSQL em contêineres separados.
 
-3. Acesse o aplicativo em seu cliente REST em http://localhost:5000. (Collection do Insomnia [aqui](/collection/todos.json))
+4. Acesse o aplicativo em seu cliente REST em http://localhost:5000. (Collection do Insomnia [aqui](/collection/todos.json))
+Para utilizar a collection, basta fazer o download do arquivo e importar no Insomnia. Lembrar de trocar as envs url e token sempre pelos valores corretos da sua aplicação.
+
+Divirta-se.
 
 ## Uso
 Registre-se ou faça login para começar a usar o sistema.
