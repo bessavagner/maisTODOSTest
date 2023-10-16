@@ -3,7 +3,7 @@ services:
   app:
     build: .
     ports:
-      - "5002:5002"
+      - "5000:5000"
     depends_on:
       - postgres
     environment:
@@ -24,7 +24,7 @@ services:
       POSTGRES_USER: ${DB_POSTGRES_USER}
       POSTGRES_PASSWORD: ${DB_POSTGRES_PASSWORD}
     ports:
-      - 5437:5432
+      - 5432:5432
     networks:
       - prv-net
 
