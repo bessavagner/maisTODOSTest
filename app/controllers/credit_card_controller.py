@@ -124,6 +124,100 @@ def create_credit_card(current_user):
         return jsonify({"message": "Expiration date and holder and number are required"}), 400
 
 
+@app.route('/api/v1/credit-card/<int:card_id>', methods=['PUT'])
+@token_required
+def update_credit_card(current_user, card_id):
+    """
+    Update a credit card by ID.
+
+    ---
+    tags:
+      - Credit Cards
+    security:
+      - Bearer Auth: []
+    parameters:
+      - name: card_id
+        in: path
+        required: true
+        type: integer
+        description: ID of the credit card to update.
+      - name: credit_card_data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CreditCard'
+    responses:
+      200:
+        description: Credit card updated successfully.
+      400:
+        description: Invalid request data.
+      401:
+        description: Unauthorized.
+      404:
+        description: Credit card not found.
+      500:
+        description: Failed to update credit card.
+    """
+    credit_card_data = request.get_json()
+
+    if not current_user:
+        return jsonify({"message": "Unauthorized"}), 401
+
+    if 'exp_date' in credit_card_data and 'holder' in credit_card_data and 'number' in credit_card_data:
+        try:
+            credit_card_dict = validate_and_parse_credit_card_data(credit_card_data)
+            if not credit_card_dict:
+                return jsonify({"message": "Invalid credit card data"}), 400
+        except Exception as e:
+            app.logger.error(f'CreditCardController - updateCreditCard - error: {str(e)}')
+            return jsonify({"message": "Failed to update credit card"}), 500
+
+        if credit_card_service.update_credit_card(card_id, credit_card_dict):
+            return jsonify({"message": "Credit card updated successfully"}), 200
+        else:
+            app.logger.error('CreditCardController - updateCreditCard - error to update credit card')
+            return jsonify({"message": "Failed to update credit card"}), 500
+    else:
+        return jsonify({"message": "Expiration date, holder, and number are required"}), 400
+
+
+@app.route('/api/v1/credit-card/<int:card_id>', methods=['DELETE'])
+@token_required
+def delete_credit_card(current_user, card_id):
+    """
+    Delete a credit card by ID.
+
+    ---
+    tags:
+      - Credit Cards
+    security:
+      - Bearer Auth: []
+    parameters:
+      - name: card_id
+        in: path
+        required: true
+        type: integer
+        description: ID of the credit card to delete.
+    responses:
+      204:
+        description: Credit card deleted successfully.
+      401:
+        description: Unauthorized.
+      404:
+        description: Credit card not found.
+      500:
+        description: Failed to delete credit card.
+    """
+    if not current_user:
+        return jsonify({"message": "Unauthorized"}), 401
+
+    if credit_card_service.delete_credit_card(card_id):
+        return '', 204
+    else:
+        app.logger.error('CreditCardController - deleteCreditCard - error to delete credit card')
+        return jsonify({"message": "Failed to delete credit card"}), 500
+
+
 def validate_and_parse_credit_card_data(data):
     try:
         app.logger.info('CreditCardController - createNewCreditCard - validate and parse credit card data')

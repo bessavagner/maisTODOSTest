@@ -14,3 +14,11 @@ class CreditCardRepository(ABC):
     @abstractmethod
     def create_credit_card(self, data):
         pass
+
+    @abstractmethod
+    def update_credit_card(self, card_id, data):
+        pass
+
+    @abstractmethod
+    def delete_credit_card(self, card_id):
+        pass
