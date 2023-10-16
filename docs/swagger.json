@@ -13,12 +13,7 @@
             "description": "List of credit cards"
           }
         },
-        "tags": ["Credit Cards"],
-        "security": [
-          {
-            "Bearer Auth": []
-          }
-        ]
+        "tags": ["Credit Cards"]
       },
       "post": {
         "summary": "Create a new credit card",
@@ -63,7 +58,12 @@
             "description": "Failed to create credit card"
           }
         },
-        "tags": ["Credit Cards"]
+        "tags": ["Credit Cards"],
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
       }
     },
     "/api/v1/credit-card/{card_id}": {
