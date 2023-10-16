@@ -106,22 +106,22 @@ def create_credit_card(current_user):
     if not current_user:
         return jsonify({"message": "Unauthorized"}), 401
 
-    if "exp_date" not in credit_card_data:
-        return jsonify({"message": "Expiration date is required"}), 400
+    if 'exp_date' in credit_card_data and 'holder' in credit_card_data and 'number' in credit_card_data:
+        try:
+            credit_card_dict = validate_and_parse_credit_card_data(credit_card_data)
+            if not credit_card_dict:
+                return jsonify({"message": "Invalid credit card data"}), 400
+        except Exception as e:
+            app.logger.error(f'CreditCardController - createNewCreditCard - error: {str(e)}')
+            return jsonify({"message": "Failed to create credit card"}), 500
 
-    try:
-        credit_card_dict = validate_and_parse_credit_card_data(credit_card_data)
-        if not credit_card_dict:
-            return jsonify({"message": "Invalid credit card data"}), 400
-    except Exception as e:
-        app.logger.error(f'CreditCardController - createNewCreditCard - error: {str(e)}')
-        return jsonify({"message": "Failed to create credit card"}), 500
-
-    if credit_card_service.create_credit_card(credit_card_dict):
-        return jsonify({"message": "Credit card created successfully"}), 201
+        if credit_card_service.create_credit_card(credit_card_dict):
+            return jsonify({"message": "Credit card created successfully"}), 201
+        else:
+            app.logger.error('CreditCardController - createNewCreditCard - error to create credit card')
+            return jsonify({"message": "Failed to create credit card"}), 500
     else:
-        app.logger.error('CreditCardController - createNewCreditCard - error to create credit card')
-        return jsonify({"message": "Failed to create credit card"}), 500
+        return jsonify({"message": "Expiration date and holder and number are required"}), 400
 
 
 def validate_and_parse_credit_card_data(data):
