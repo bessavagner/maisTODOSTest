@@ -10,10 +10,12 @@ cffi==1.16.0
 charset-normalizer==3.3.0
 click==8.1.7
 colorama==0.4.6
+coloredlogs==15.0.1
 cors==1.0.1
 coverage==7.3.2
 cryptography==41.0.4
 exceptiongroup==1.1.3
+Faker==19.10.0
 filelock==3.12.4
 Flask==3.0.0
 Flask-Bcrypt==1.0.1
@@ -28,6 +30,7 @@ Flask-Testing==0.8.1
 future==0.18.3
 gevent==23.9.1
 greenlet==3.0.0
+humanfriendly==10.0
 idna==3.4
 importlib-metadata==6.8.0
 importlib-resources==6.1.0
@@ -56,8 +59,11 @@ pydantic_core==2.10.1
 PyJWT==2.8.0
 PySocks==1.7.1
 pytest==7.4.2
+pytest-cov==4.1.0
 pytest-postgresql==5.0.0
 python-creditcard @ git+https://github.com/maistodos/python-creditcard.git@6b6bcc5d975985337c35e5c1a4f87d861bcac731
+python-dateutil==2.8.2
+python-decouple==3.8
 python-dotenv==1.0.0
 pytz==2023.3.post1
 referencing==0.30.2
