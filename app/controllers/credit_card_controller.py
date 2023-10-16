@@ -30,7 +30,12 @@ def list_credit_cards():
     """
     app.logger.info('CreditCardController - listCreditCards - list credit cards')
     credit_cards = credit_card_service.list_credit_cards()
-    return jsonify([card.to_dict() for card in credit_cards])
+
+    if credit_cards is not None:
+        return jsonify([card.to_dict() for card in credit_cards]), 200
+    else:
+        app.logger.error('CreditCardController - listCreditCards - error listing credit cards')
+        return jsonify({"message": "Failed to list credit cards"}), 500
 
 
 @app.route('/api/v1/credit-card/<int:card_id>', methods=['GET'])
@@ -98,26 +103,25 @@ def create_credit_card(current_user):
     """
     credit_card_data = request.get_json()
 
-    app.logger.info('CreditCardController - createNewCreditCard - verify user authentication')
     if not current_user:
         return jsonify({"message": "Unauthorized"}), 401
 
-    if not 'exp_date' in credit_card_data:
-        return jsonify({"message": "Request body is required"}), 400
+    if 'exp_date' in credit_card_data and 'holder' in credit_card_data and 'number' in credit_card_data:
+        try:
+            credit_card_dict = validate_and_parse_credit_card_data(credit_card_data)
+            if not credit_card_dict:
+                return jsonify({"message": "Invalid credit card data"}), 400
+        except Exception as e:
+            app.logger.error(f'CreditCardController - createNewCreditCard - error: {str(e)}')
+            return jsonify({"message": "Failed to create credit card"}), 500
 
-    try:
-        app.logger.info('CreditCardController - createNewCreditCard - validate and parse credit card data')
-        credit_card_dict = validate_and_parse_credit_card_data(credit_card_data)
-    except ValidationError:
-        app.logger.error('CreditCardController - createNewCreditCard - error validation payload')
-        return jsonify({"message": "Invalid request data"}), 400
-
-    app.logger.info('CreditCardController - createNewCreditCard - call create credit card service')
-    if credit_card_service.create_credit_card(credit_card_dict):
-        return jsonify({"message": "Credit card created successfully"}), 201
+        if credit_card_service.create_credit_card(credit_card_dict):
+            return jsonify({"message": "Credit card created successfully"}), 201
+        else:
+            app.logger.error('CreditCardController - createNewCreditCard - error to create credit card')
+            return jsonify({"message": "Failed to create credit card"}), 500
     else:
-        app.logger.error('CreditCardController - createNewCreditCard - error to create credit card')
-        return jsonify({"message": "Failed to create credit card"}), 500
+        return jsonify({"message": "Expiration date and holder and number are required"}), 400
 
 
 def validate_and_parse_credit_card_data(data):
