@@ -4,6 +4,8 @@ from app.config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
+import logging
+import coloredlogs
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -25,6 +27,10 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 def send_swagger():
     return send_from_directory('../docs', 'swagger.json')
 
+
+logging.basicConfig(level=logging.DEBUG, handlers=[logging.StreamHandler()])
+
+coloredlogs.install(level='DEBUG', logger=app.logger)
 
 app.register_blueprint(swaggerui_blueprint)
 

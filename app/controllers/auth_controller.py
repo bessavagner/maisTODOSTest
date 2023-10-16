@@ -42,19 +42,26 @@ def register():
     """
     data = request.get_json()
 
+    app.logger.info('AuthController - register - validate payload')
     if 'email' in data and 'password' in data and 'confirm_password' in data:
+        app.logger.info('AuthController - register - checking email size')
         if len(data['email']) > 255:
             return jsonify({"message": "Email is too long"}), 400
 
+        app.logger.info('AuthController - register - checking password size')
         if len(data['password']) < 8:
             return jsonify({"message": "Password is too short"}), 400
 
+        app.logger.info('AuthController - register - call service to create new user')
         user = user_service.create_user(data)
         if user:
+            app.logger.info('AuthController - register - user created')
             return jsonify({"message": "User registered successfully"}), 201
         else:
+            app.logger.error('AuthController - register - error to register user')
             return jsonify({"message": "Failed to register user"}), 500
     else:
+        app.logger.error('AuthController - register - payload validation error')
         return jsonify({"message": "Email and password are required"}), 400
 
 
@@ -94,17 +101,25 @@ def login():
     """
     data = request.get_json()
 
+    app.logger.info('AuthController - login - validate payload')
     if 'email' in data and 'password' in data:
+        app.logger.info('AuthController - login - get user by email')
         user = user_service.get_user_by_email(data['email'])
+
+        app.logger.info('AuthController - login - validate match passwords')
         if user and check_password_hash(user['password'], data['password']):
+
+            app.logger.info('AuthController - login - generate token with expiration date')
             token = jwt.encode(
                 {'username': user['email'], 'exp': datetime.datetime.now() + datetime.timedelta(hours=12)},
                 app.config['SECRET_KEY'])
             return jsonify({'message': 'Validated successfully', 'token': token,
                             'exp': datetime.datetime.now() + datetime.timedelta(hours=1)})
         else:
+            app.logger.error('AuthController - login - Login error')
             return jsonify({"message": "Invalid email or password"}), 401
     else:
+        app.logger.error('AuthController - login - payload validation error')
         return jsonify({"message": "Email and password are required"}), 400
 
 
@@ -136,9 +151,12 @@ def get_user_by_email(username):
       404:
         description: User not found.
     """
+    app.logger.info('AuthController - getUserByEmail - call service method')
     user = user_service.get_user_by_email(username)
 
     if user:
+        app.logger.info('AuthController - getUserByEmail - return found user by email')
         return jsonify(user), 200
     else:
+        app.logger.error('AuthController - getUserByEmail - user not found')
         return jsonify({"message": "User not found"}), 404
