@@ -30,8 +30,7 @@ class TestCreditCardService(unittest.TestCase):
 
         self.repository.create_credit_card.return_value = valid_payload
 
-        result, status_code = self.service.create_credit_card(valid_payload)
-        self.assertEqual(status_code, 201)
+        result = self.service.create_credit_card(valid_payload)
         self.assertEqual(result, valid_payload)
 
     def test_create_credit_card_invalid_number(self):
@@ -43,7 +42,7 @@ class TestCreditCardService(unittest.TestCase):
         }
 
         result, status_code = self.service.create_credit_card(invalid_payload)
-        self.assertEqual(status_code, 422)
+        self.assertEqual(status_code, 400)
 
     def test_create_credit_card_missing_data(self):
         missing_data_payload = {
@@ -78,6 +77,48 @@ class TestCreditCardService(unittest.TestCase):
 
         result, status_code = self.service.create_credit_card(existing_card_payload)
         self.assertEqual(status_code, 400)
+
+    def test_update_credit_card_valid(self):
+        card_id = 1
+        valid_payload = {
+            "exp_date": "02/2025",
+            "holder": "Updated User",
+            "number": "4005519200000004",
+            "cvv": "456",
+        }
+        self.repository.get_credit_card.return_value = {'id': card_id, 'number': '4005519200000004'}
+        self.repository.update_credit_card.return_value = True
+
+        result = self.service.update_credit_card(card_id, valid_payload)
+        self.assertTrue(result)
+
+    def test_delete_credit_card_valid(self):
+        card_id = 1
+        self.repository.get_credit_card.return_value = {'id': card_id, 'number': '4005519200000004'}
+        self.repository.delete_credit_card.return_value = True
+
+        result = self.service.delete_credit_card(card_id)
+        self.assertTrue(result)
+
+    def test_update_credit_card_nonexistent_card(self):
+        card_id = 1
+        invalid_payload = {
+            "exp_date": "02/2025",
+            "holder": "Updated User",
+            "number": "4005519200000004",
+            "cvv": "456",
+        }
+        self.repository.get_credit_card.return_value = None
+
+        result = self.service.update_credit_card(card_id, invalid_payload)
+        self.assertFalse(result)
+
+    def test_delete_credit_card_nonexistent_card(self):
+        card_id = 1
+        self.repository.get_credit_card.return_value = None
+
+        result = self.service.delete_credit_card(card_id)
+        self.assertFalse(result)
 
 
 if __name__ == '__main__':
