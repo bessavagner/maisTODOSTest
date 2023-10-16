@@ -36,38 +36,36 @@ class CreditCardService:
             return None
 
     def create_credit_card(self, payload):
-        if "exp_date" in payload and "number" in payload:
-            formatted_exp_date = self.validator.format_exp_date(payload["exp_date"])
+        formatted_exp_date = self.validator.format_exp_date(payload["exp_date"])
 
-            if not formatted_exp_date:
-                return {"error": "Invalid expiration date format"}, 400
+        if not formatted_exp_date:
+            return {"error": "Invalid expiration date format"}, 400
 
-            validate_card = self.validator.is_valid_card_number(payload["number"])
+        validate_card = self.validator.is_valid_card_number(payload["number"])
 
-            if not validate_card:
-                app.logger.error('CreditCardService - createCreditCard - card number is invalid')
-                return {"error": "Credit card is invalid"}, 422
+        if not validate_card:
+            app.logger.error('CreditCardService - createCreditCard - card number is invalid')
+            return {"error": "Credit card is invalid"}, 422
 
-            brand = self.validator.get_brand_by_card_number(payload["number"])
+        brand = self.validator.get_brand_by_card_number(payload["number"])
 
-            app.logger.info('CreditCardService - createCreditCard - encrypt card number')
-            credit_card = credit_card_handler.encrypt_credit_card_number(payload["number"])
+        app.logger.info('CreditCardService - createCreditCard - encrypt card number')
+        credit_card = credit_card_handler.encrypt_credit_card_number(payload["number"])
 
-            new_credit_card = {
-                "exp_date": formatted_exp_date,
-                "holder": payload["holder"],
-                "number": credit_card,
-                "cvv": payload["cvv"],
-                "brand": brand
-            }
+        new_credit_card = {
+            "exp_date": formatted_exp_date,
+            "holder": payload["holder"],
+            "number": credit_card,
+            "cvv": payload["cvv"],
+            "brand": brand
+        }
 
-            created_credit_card = self.repository.create_credit_card(new_credit_card)
+        app.logger.info('CreditCardService - createCreditCard - call repository method to create credit card')
+        created_credit_card = self.repository.create_credit_card(new_credit_card)
 
-            if created_credit_card:
-                return created_credit_card, 201
-            else:
-                app.logger.error('CreditCardService - createCreditCard - failed to create')
-                return {"error": "Failed to create credit card"}, 500
+        if created_credit_card:
+            app.logger.info('CreditCardService - createCreditCard - credit card created successfully')
+            return True
         else:
-            app.logger.error('CreditCardService - createCreditCard - missing args in payload')
-            return {"error": "Missing required data in payload"}, 400
+            app.logger.error('CreditCardService - createCreditCard - failed to create')
+            return False
