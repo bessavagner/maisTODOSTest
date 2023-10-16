@@ -165,7 +165,7 @@ CREATE TABLE credit_cards (
     id SERIAL PRIMARY KEY,
     exp_date VARCHAR(10),
     holder VARCHAR(255),
-    number VARCHAR(16),
+    number VARCHAR(255),
     cvv VARCHAR(4),
     brand VARCHAR(255)
 );
