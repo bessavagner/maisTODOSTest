@@ -65,7 +65,59 @@ class CreditCardService:
 
         if created_credit_card:
             app.logger.info('CreditCardService - createCreditCard - credit card created successfully')
-            return True
+            return created_credit_card
         else:
             app.logger.error('CreditCardService - createCreditCard - failed to create')
+            return None
+
+    def update_credit_card(self, card_id, payload):
+        existing_credit_card = self.repository.get_credit_card(card_id)
+        if not existing_credit_card:
+            app.logger.error('CreditCardService - updateCreditCard - credit card not found')
+            return False
+
+        formatted_exp_date = self.validator.format_exp_date(payload["exp_date"])
+
+        if not formatted_exp_date:
+            return False
+
+        validate_card = self.validator.is_valid_card_number(payload["number"])
+
+        if not validate_card:
+            app.logger.error('CreditCardService - updateCreditCard - card number is invalid')
+            return False
+
+        brand = self.validator.get_brand_by_card_number(payload["number"])
+
+        app.logger.info('CreditCardService - createCreditCard - encrypt card number')
+        credit_card = credit_card_handler.encrypt_credit_card_number(payload["number"])
+
+        updated_credit_card = {
+            "exp_date": formatted_exp_date,
+            "holder": payload["holder"],
+            "number": credit_card,
+            "cvv": payload["cvv"],
+            "brand": brand
+        }
+
+        app.logger.info('CreditCardService - updateCreditCard - call repository method to update credit card')
+        if self.repository.update_credit_card(card_id, updated_credit_card):
+            app.logger.info('CreditCardService - updateCreditCard - credit card updated successfully')
+            return True
+        else:
+            app.logger.error('CreditCardService - updateCreditCard - failed to update')
+            return False
+
+    def delete_credit_card(self, card_id):
+        existing_credit_card = self.repository.get_credit_card(card_id)
+        if not existing_credit_card:
+            app.logger.error('CreditCardService - deleteCreditCard - credit card not found')
+            return False
+
+        app.logger.info('CreditCardService - deleteCreditCard - call repository method to delete credit card')
+        if self.repository.delete_credit_card(card_id):
+            app.logger.info('CreditCardService - deleteCreditCard - credit card deleted successfully')
+            return True
+        else:
+            app.logger.error('CreditCardService - deleteCreditCard - failed to delete')
             return False

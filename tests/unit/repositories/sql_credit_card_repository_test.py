@@ -64,6 +64,59 @@ class TestSQLCreditCardRepository(unittest.TestCase):
                 self.assertEqual(credit_card.brand, credit_card_data['brand'])
                 commit_mock.assert_called_once()
 
+    def test_update_credit_card_existing_card(self):
+        card_id = 1
+        updated_data = {
+            'exp_date': '02/25',
+            'holder': 'Updated User',
+            'number': 'Updated Card Number',
+            'cvv': '456',
+            'brand': 'MasterCard'
+        }
+
+        with app.app_context():
+            with patch('app.repositories.sql_credit_card_repository.db.session.query') as query_mock:
+                expected_credit_card = CreditCard(exp_date='01/23', holder='Luan Santos', number='1234567812345678',
+                                                  cvv='123', brand='Visa')
+                query_mock().filter().first.return_value = expected_credit_card
+
+                updated_credit_card = self.credit_card_repository.update_credit_card(card_id, updated_data)
+
+                self.assertEqual(updated_credit_card.exp_date, updated_data['exp_date'])
+                self.assertEqual(updated_credit_card.holder, updated_data['holder'])
+                self.assertEqual(updated_credit_card.number, updated_data['number'])
+                self.assertEqual(updated_credit_card.cvv, updated_data['cvv'])
+                self.assertEqual(updated_credit_card.brand, updated_data['brand'])
+
+    def test_update_credit_card_non_existing_card(self):
+        card_id = 2
+        updated_data = {
+            'exp_date': '02/25',
+            'holder': 'Updated User',
+            'number': 'Updated Card Number',
+            'cvv': '456',
+            'brand': 'MasterCard'
+        }
+
+        with app.app_context():
+            with patch('app.repositories.sql_credit_card_repository.db.session.query') as query_mock:
+                query_mock().filter().first.return_value = None
+
+                updated_credit_card = self.credit_card_repository.update_credit_card(card_id, updated_data)
+
+                self.assertIsNone(updated_credit_card)
+
+    def test_delete_credit_card_non_existing_card(self):
+        card_id = 2
+
+        with app.app_context():
+            with patch('app.repositories.sql_credit_card_repository.db.session.query') as query_mock:
+                query_mock().filter().first.return_value = None
+
+                result = self.credit_card_repository.delete_credit_card(card_id)
+
+                self.assertFalse(result)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -41,3 +41,28 @@ class SQLCreditCardRepository(CreditCardRepository):
         db.session.add(new_credit_card)
         db.session.commit()
         return new_credit_card
+
+    def update_credit_card(self, card_id, data):
+        try:
+            existing_credit_card = db.session.query(CreditCard).filter(CreditCard.id == card_id).first()
+            if existing_credit_card:
+                for key, value in data.items():
+                    setattr(existing_credit_card, key, value)
+                db.session.commit()
+                return existing_credit_card
+            else:
+                return None
+        except SQLAlchemyError as e:
+            raise CreditCardRepositoryException("Error to update credit card")
+
+    def delete_credit_card(self, card_id):
+        try:
+            existing_credit_card = db.session.query(CreditCard).filter(CreditCard.id == card_id).first()
+            if existing_credit_card:
+                db.session.delete(existing_credit_card)
+                db.session.commit()
+                return True
+            else:
+                return False
+        except SQLAlchemyError as e:
+            raise CreditCardRepositoryException("Error to delete credit card")
