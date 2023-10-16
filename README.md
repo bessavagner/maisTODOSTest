@@ -126,6 +126,11 @@ Para rodar os testes, rode o seguinte comando. Ele exibirá o retorno de testes 
 ```bash
   coverage run -m pytest
 ```
+Para visualizar o resultado dos testes:
+
+```bash
+  coverage report
+```
 
 
 ## Aprendizados
@@ -144,6 +149,12 @@ Faria a criação de um front-end.
 Melhoraria as validações realizadas nos métodos de cartão de crédito, para ganhar mais segurança nisso.
 
 Faria uma refatoração no retorno do número do cartão, visto que está trazendo todo um hash feito para deixar ele criptografado na base.
+
+Faria um diagrama de arquitetura, para melhorar a visualização
+
+Faria testes end2end usando Selenium, pois por conta do tempo não consegui implementar, apenas testes unitários e de integração.
+
+Faria a implementação de uma ferramenta de monitoramente e observabilidade como o new relic, para visualizar e armazanar os logs que foram adicionados na aplicação.
 
 
 ## Autores
