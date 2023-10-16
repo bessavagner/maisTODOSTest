@@ -159,6 +159,24 @@ Caso se depare com esse erro, faça o seguinte:
   sudo apt-get install libpq-dev
 ```
 
+Caso encontre erros para gerar as migrations, segue as queries para criar as tabelas:
+```shell
+CREATE TABLE credit_cards (
+    id SERIAL PRIMARY KEY,
+    exp_date VARCHAR(10),
+    holder VARCHAR(255),
+    number VARCHAR(16),
+    cvv VARCHAR(4),
+    brand VARCHAR(255)
+);
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255),
+    password VARCHAR(255),
+    confirm_password VARCHAR(255)
+);
+```
 
 
 ## Aprendizados
