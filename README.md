@@ -114,22 +114,17 @@ Esteja a vontade para criar os valores de acordo com o que preferir
 
 
 ## Demonstração
+Para ver a demonstração da documentação, basta acessar o link abaixo:
 
-Insira um gif ou um link de alguma demonstração
+[Demonstração da documentação](https://www.youtube.com/watch?v=4U_yC0YXfks)
 
 
 ## Rodando os testes
 
-Para rodar os testes, rode o seguinte comando
+Para rodar os testes, rode o seguinte comando. Ele exibirá o retorno de testes unitários e de integração.
 
 ```bash
-  coverage run -m unittest tests/unit/path_a_ser_testado
-```
-
-Para visualizar o retorno dos testes, rode o segunte comando
-
-```bash
-  coverage report
+  coverage run -m pytest
 ```
 
 
@@ -154,10 +149,6 @@ Faria uma refatoração no retorno do número do cartão, visto que está trazen
 ## Autores
 
 - [@luansantosdevpy](https://www.github.com/luansantosdevpy)
-
-
-## 🚀 Sobre mim
-Eu sou uma pessoa desenvolvedora back-end.
 
 
 ## Licença
